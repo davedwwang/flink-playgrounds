@@ -19,8 +19,13 @@
 version: "2.1"
 services:
   client:
-    build: ../docker/ops-playground-image
-    image: apache/flink-ops-playground:1-FLINK-1.16-scala_2.12
+    build:
+      context: ../docker/ops-playground-image
+      args:
+        FLINK_VERSION: ${FLINK_VERSION}
+        FLINK_KAFKA_CONNECTOR_VERSION: ${FLINK_KAFKA_CONNECTOR_VERSION}
+
+    image: apache/flink-ops-playground:1-FLINK-${FLINK_VERSION}-scala_2.12
     command: "flink run -d /opt/ClickCountJob.jar --bootstrap.servers kafka:9092 --checkpointing --event-time"
     depends_on:
       - jobmanager
@@ -31,12 +36,12 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
   clickevent-generator:
-    image: apache/flink-ops-playground:1-FLINK-1.16-scala_2.12
+    image: apache/flink-ops-playground:1-FLINK-${FLINK_VERSION}-scala_2.12
     command: "java -classpath /opt/ClickCountJob.jar:/opt/flink/lib/* org.apache.flink.playgrounds.ops.clickcount.ClickEventGenerator --bootstrap.servers kafka:9092 --topic input"
     depends_on:
       - kafka
   jobmanager:
-    image: apache/flink:1.16.0-scala_2.12-java11
+    image: apache/flink:${FLINK_IMAGE_VERSION}
     command: "jobmanager.sh start-foreground"
     ports:
       - 8081:8081
@@ -46,7 +51,7 @@ services:
     environment:
       - JOB_MANAGER_RPC_ADDRESS=jobmanager
   taskmanager:
-    image: apache/flink:1.16.0-scala_2.12-java11
+    image: apache/flink:${FLINK_IMAGE_VERSION}
     depends_on:
       - jobmanager
     command: "taskmanager.sh start-foreground"

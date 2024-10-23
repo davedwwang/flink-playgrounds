@@ -45,6 +45,7 @@ under the License.
     <properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<flink.version>1.16.0</flink.version>
+		<flink.kakfa.connector.version>1.16.0</flink.kakfa.connector.version>
 		<java.version>11</java.version>
 		<scala.binary.version>2.12</scala.binary.version>
 		<maven.compiler.release>${java.version}</maven.compiler.release>
@@ -71,7 +72,7 @@ under the License.
 		<dependency>
 			<groupId>org.apache.flink</groupId>
 			<artifactId>flink-connector-kafka</artifactId>
-			<version>${flink.version}</version>
+			<version>${flink.kakfa.connector.version}</version>
 		</dependency>
 
 		<!-- Logging dependencies -->

@@ -23,7 +23,10 @@ cd operations-playground
 Build the Docker image by running
 
 ```bash
-docker-compose build
+export FLINK_IMAGE_VERSION=1.18.1-scala_2.12-java11
+export FLINK_VERSION=1.18.1
+export FLINK_KAFKA_CONNECTOR_VERSION=1.16.3
+docker compose build
 ```
 
 ### Starting the Playground
@@ -31,7 +34,7 @@ docker-compose build
 Once you built the Docker image, run the following command to start the playground
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 You can check if the playground was successfully started by accessing the WebUI of the Flink cluster at [http://localhost:8081](http://localhost:8081).
@@ -46,7 +49,7 @@ In Settings > Resources > File Sharing, add the operations-playground/conf direc
 To stop the playground, run the following command
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ## Further instructions
