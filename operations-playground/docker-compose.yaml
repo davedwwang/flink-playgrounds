@@ -74,5 +74,51 @@ services:
     ports:
       - 9092:9092
       - 9094:9094
+  namenode:
+    build:
+      context: ../docker/hadoop
+      args:
+        HADOOP_IMAGE_VERSION: ${HADOOP_IMAGE_VERSION}
+    image: local/hadoop:${HADOOP_IMAGE_VERSION}
+    command: "/opt/hadoop/bin/hdfs namenode -format test && /opt/hadoop/bin/hadoop-entrypoint.sh hdfs namenode"
+    volumes:
+      - ~/hadoop/namenode:/data/hadoop/namenode
+    ports:
+      - 4007:4007
+      - 50070:50070
+  datanode-1:
+    image: local/hadoop:${HADOOP_IMAGE_VERSION}
+    command: "/opt/hadoop/bin/hadoop-entrypoint.sh hdfs datanode"
+    volumes:
+      - ~/hadoop/data-1:/data/hadoop/datanode
+    depends_on:
+      - namenode
+  datanode-2:
+    image: local/hadoop:${HADOOP_IMAGE_VERSION}
+    command: "/opt/hadoop/bin/hadoop-entrypoint.sh hdfs datanode"
+    volumes:
+      - ~/hadoop/data-2:/data/hadoop/datanode
+    depends_on:
+      - namenode
+  resourcemanager:
+    image: local/hadoop:${HADOOP_IMAGE_VERSION}
+    command: "/opt/hadoop/bin/hadoop-entrypoint.sh yarn resourcemanager"
+    depends_on:
+      - namenode
+      - datanode-1
+      - datanode-2
+    ports:
+      - 8032:8032
+      - 8088:8088
+  nodemanager-1:
+    image: local/hadoop:${HADOOP_IMAGE_VERSION}
+    command: "/opt/hadoop/bin/hadoop-entrypoint.sh yarn nodemanager"
+    depends_on:
+      - resourcemanager
+  nodemanager-2:
+    image: local/hadoop:${HADOOP_IMAGE_VERSION}
+    command: "/opt/hadoop/bin/hadoop-entrypoint.sh yarn nodemanager"
+    depends_on:
+      - resourcemanager
 volumes:
   flink_data:
