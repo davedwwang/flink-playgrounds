@@ -26,7 +26,8 @@ Build the Docker image by running
 export FLINK_IMAGE_VERSION=1.18.1-scala_2.12-java11
 export FLINK_VERSION=1.18.1
 export FLINK_KAFKA_CONNECTOR_VERSION=1.16.3
-docker compose build
+export HADOOP_IMAGE_VERSION=3.3.6
+sudo docker compose build
 ```
 
 ### Starting the Playground
